@@ -26,81 +26,45 @@ namespace Ardalis.Specification.EntityFrameworkCore
     }
 
     /// <inheritdoc/>
-    public virtual async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
+    public virtual async Task AddAsync(T entity, CancellationToken cancellationToken = default)
     {
-      dbContext.Set<T>().Add(entity);
-
-      await SaveChangesAsync(cancellationToken);
-
-      return entity;
+      await dbContext.Set<T>().AddAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public virtual async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    public virtual async Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     {
-        dbContext.Set<T>().AddRange(entities);
-
-        await SaveChangesAsync(cancellationToken);
-
-        return entities;
+      await dbContext.Set<T>().AddRangeAsync(entities, cancellationToken);
     }
-    
+
     /// <inheritdoc/>
-    public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+    public virtual void Update(T entity)
     {
       dbContext.Set<T>().Update(entity);
-
-      await SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
-    public virtual async Task UpdateRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    public virtual void UpdateRange(IEnumerable<T> entities)
     {
       dbContext.Set<T>().UpdateRange(entities);
-
-      await SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
-    public virtual async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
+    public virtual void Delete(T entity)
     {
       dbContext.Set<T>().Remove(entity);
-
-      await SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
-    public virtual async Task DeleteRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    public virtual void DeleteRange(IEnumerable<T> entities)
     {
       dbContext.Set<T>().RemoveRange(entities);
-
-      await SaveChangesAsync(cancellationToken);
-    }
-    
-    /// <inheritdoc/>
-    public virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-      return await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
     public virtual async Task<T?> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull
     {
       return await dbContext.Set<T>().FindAsync(new object[] { id }, cancellationToken: cancellationToken);
-    }
-
-    /// <inheritdoc/>
-    [Obsolete]
-    public virtual async Task<T?> GetBySpecAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
-    {
-      return await ApplySpecification(specification).FirstOrDefaultAsync(cancellationToken);
-    }
-
-    /// <inheritdoc/>
-    [Obsolete]
-    public virtual async Task<TResult?> GetBySpecAsync<TResult>(ISpecification<T, TResult> specification, CancellationToken cancellationToken = default)
-    {
-      return await ApplySpecification(specification).FirstOrDefaultAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
